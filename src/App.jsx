@@ -5,8 +5,8 @@ import { BrowserRouter, Routes, Route, useParams } from "react-router-dom"
 
 function App() {
   //peerId of client that send the stream
-  const {peerId} = useParams()
-  const {nameOfStreamProvider} = useParams()
+  const peerId = useParams()
+  const nameOfStreamProvider = useParams()
   return (
     <BrowserRouter>
       <Routes>
