@@ -1,6 +1,6 @@
 
 //caller 
-export default function CameraPage () {
+export default function Camera () {
   return (
     <div>
       CameraPage

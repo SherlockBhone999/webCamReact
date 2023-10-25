@@ -3,7 +3,7 @@ import { useRef , useEffect } from "react"
 
 
 //accept one call 
-export default function ViewerPage () {
+export default function Viewer () {
   const location = useLocation()
   const streamProvider = location.pathname.slice(1)
   //we don't need peerId to accept the call, just to know who provide the stream
