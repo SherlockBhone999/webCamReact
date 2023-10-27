@@ -69,6 +69,8 @@ const ContextProvider = () => {
       users,
       isViewer,
       setIsViewer,
+      peerConnectionRef,
+      peer,
 
     }}>
       <App />
