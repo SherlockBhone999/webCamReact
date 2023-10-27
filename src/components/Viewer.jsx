@@ -1,7 +1,6 @@
 
-import { useRef , useEffect } from "react"
+import { useRef , useEffect , useContext} from "react"
 
-import { useContext } from "react"
 import { Context } from "../ContextProvider"
 
 //accept one call 
@@ -27,11 +26,11 @@ export default function Viewer () {
   return (
     <div>
       ViewerPage
-  
+  {/*
       <div>
         <video ref={videoRef} style={{ width : 90 }}/>
       </div>
-    
+  */}  
     </div>
   )
 }
