@@ -56,14 +56,12 @@ const ContextProvider = () => {
     })
     
     peer.on('call', (call) => {
+      call.answer()
       call.on("stream", (remoteStream) => {
         videoRef.current.srcObject = remoteStream;
         videoRef.current.play();
       })
       
-      call.on('close', () => {
-        videoRef.current.remove()
-      })
       
     })
     
