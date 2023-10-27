@@ -10,11 +10,14 @@ const socket = io(serverBaseUrl)
 
 export const Context = createContext()
 
+
 const ContextProvider = () => {
   const [ users , setUsers ] = useState([])
   const [ userInfo, setUserInfo ] = useState({ name : "bhone", isViewer : true , platform : "web"})
   const peerConnectionRef = useRef(null)
   const [ isViewer , setIsViewer ] = useState(false)
+  //for viewer
+  const videoRef = useRef(null)
   
   const updateUsers = (potentialNewUser, userss) => {
       //update users
@@ -52,6 +55,18 @@ const ContextProvider = () => {
       updateUsers(newUserInfo, userss)
     })
     
+    peer.on('call', (call) => {
+      call.on("stream", (remoteStream) => {
+        videoRef.current.srcObject = remoteStream;
+        videoRef.current.play();
+      })
+      
+      call.on('close', () => {
+        videoRef.current.remove()
+      })
+      
+    })
+    
     peerConnectionRef.current = peer 
   },[])
   
@@ -70,7 +85,7 @@ const ContextProvider = () => {
       isViewer,
       setIsViewer,
       peerConnectionRef,
-      peer,
+      videoRef,
 
     }}>
       <App />

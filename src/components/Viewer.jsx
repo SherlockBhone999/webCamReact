@@ -5,32 +5,17 @@ import { Context } from "../ContextProvider"
 
 //accept one call 
 export default function Viewer () {
-  const { peer } = useContext(Context)
   //we don't need peerId to accept the call, just to know who provide the stream
-  const videoRef = useRef(null)
-
-  useEffect(()=>{
-    peer.on('call', (call) => {
-      call.on("stream", (remoteStream) => {
-        videoRef.current.srcObject = remoteStream;
-        videoRef.current.play();
-      })
-      
-      call.on('close', () => {
-        videoRef.current.remove()
-      })
-      
-    })
-  },[])
+  const { videoRef } = useContext(Context)
 
   return (
     <div>
       ViewerPage
-  {/*
+  
       <div>
         <video ref={videoRef} style={{ width : 90 }}/>
       </div>
-  */}  
+  
     </div>
   )
 }
