@@ -1,36 +1,74 @@
 import App from './App'
-import { useState , createContext , useEffect } from "react"
+import { useState , createContext , useEffect , useRef } from "react"
 import Peer from "peerjs"
+import io from "socket.io-client"
 
-const serverBaseUrl = "http://localhost:3000"
-const peer = new Peer()
+const serverBaseUrl = "http://localhost:3000/"
+
+const socket = io(serverBaseUrl)
 
 export const Context = createContext()
 
 const ContextProvider = () => {
-  const [ videoDimensions, setVideoDimensions ] = useState({ width : null, height : null })
-  const [ viewerPeerIds , setViewerPeerIds ] = useState([])
+  const [ users , setUsers ] = useState([])
+  const [ userInfo, setUserInfo ] = useState({ name : "bhone", isViewer : true , platform : "web"})
+  const peerConnectionRef = useRef(null)
+  const [ isViewer , setIsViewer ] = useState(false)
   
-  //states should update via socket 
-  const [ myPeerId , setMyPeerId ] = useState(null)
-  const [ videos , setVideos ] = useState([
-    { provider : "" , stream : null }
-    ])
+  const updateUsers = (potentialNewUser, userss) => {
+      //update users
+      var isAlreadyExist = false
+      var indexToReplace = null
+      userss.map((user,index) => {
+        if(user.socketId === potentialNewUser.socketId){
+          isAlreadyExist = true
+          indexToReplace = index
+        }
+      })
+      if(!isAlreadyExist){
+        const arr = [...userss, potentialNewUser]
+        setUsers(arr)
+      }else{
+        const arr = [...userss]
+        arr.splice(indexToReplace, 1, potentialNewUser)
+        setUsers(arr)
+      }
+  }
   
   useEffect(()=>{
-    /*
-    peer.on("open" , (id) => {
-      setMyPeerId(id)
-    }) 
-    */
+    const peer = new Peer()
+    peer.on("open", (peerId) => {
+      const newUserInfo = {
+          ...userInfo,
+          socketId : socket.id ,
+          peerId : peerId
+        }
+      setUserInfo(newUserInfo)
+      socket.emit("sendUserInfoToServer", newUserInfo, users )
+    })
     
+    socket.on("sendUserInfoToClient", (newUserInfo, userss) => {
+      updateUsers(newUserInfo, userss)
+    })
+    
+    peerConnectionRef.current = peer 
   },[])
+  
+  useEffect(()=>{
+    if(userInfo.socketId && userInfo.peerId){
+      socket.emit("sendUserInfoToServer", userInfo, users )
+    }
+  },[userInfo])
+  
   
   return (
     <Context.Provider value={{
-      serverBaseUrl,
-      myPeerId,
-      
+      userInfo,
+      setUserInfo,
+      users,
+      isViewer,
+      setIsViewer,
+
     }}>
       <App />
     </Context.Provider>
