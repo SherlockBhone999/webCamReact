@@ -6,20 +6,14 @@ import { Context } from "../ContextProvider"
 //accept one call 
 export default function Viewer () {
   //we don't need peerId to accept the call, just to know who provide the stream
-  const { videoRef } = useContext(Context)
-  const [ hide, setHide ] = useState("")
+  const { videoRef, hideVideo } = useContext(Context)
   
-  useEffect(()=>{
-    if(videoRef.current.srcObject){
-      if(videoRef.current.srcObject === null) setHide("hidden")
-    }
-  },[videoRef.current])
 
   return (
     <div>
       ViewerPage
   
-      <div class={hide}>
+      <div class={hideVideo}>
         <video ref={videoRef} style={{ width : 300 }}/>
       </div>
   

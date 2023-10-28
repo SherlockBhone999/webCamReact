@@ -18,6 +18,7 @@ const ContextProvider = () => {
   const [ isViewer , setIsViewer ] = useState(false)
   //for viewer
   const videoRef = useRef(null)
+  const [ hideVideo , setHideVideo ] = useState("")
   
   const updateUsers = (potentialNewUser, userss) => {
       //update users
@@ -85,7 +86,10 @@ const ContextProvider = () => {
       setIsViewer,
       peerConnectionRef,
       videoRef,
-
+      hideVideo,
+      setHideVideo,
+      
+      
     }}>
       <App />
     </Context.Provider>

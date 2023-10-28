@@ -8,7 +8,7 @@ let theCall;
 
 const OneCallableUser = ({user}) => {
   const [ isCalled, setIsCalled ] = useState(false)
-  const { peerConnectionRef, videoRef } = useContext(Context)
+  const { peerConnectionRef, videoRef, setHideVideo  } = useContext(Context)
   
   const call = (peerId) => {
     setIsCalled(true)
@@ -28,6 +28,7 @@ const OneCallableUser = ({user}) => {
       
       theCall.on('close', () => {
         videoRef.current.srcObject = null;
+        setHideVideo("hidden")
       })
     });
   }
