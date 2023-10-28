@@ -3,6 +3,9 @@
 import { useContext, useState, useEffect } from "react"
 import { Context } from "../ContextProvider"
 
+
+let theCall;
+
 const OneCallableUser = ({user}) => {
   const [ isCalled, setIsCalled ] = useState(false)
   const { peerConnectionRef, videoRef } = useContext(Context)
@@ -16,19 +19,23 @@ const OneCallableUser = ({user}) => {
       navigator.mozGetUserMedia;
 
     getUserMedia({ video: true }, (mediaStream) => {
-      const call = peerConnectionRef.current.call(peerId, mediaStream);
+      theCall = peerConnectionRef.current.call(peerId, mediaStream);
 
-      call.on("stream", (remoteStream) => {
+      theCall.on("stream", (remoteStream) => {
         videoRef.current.srcObject = remoteStream;
         videoRef.current.play();
       });
+      
+      theCall.on('close', () => {
+        videoRef.current.srcObject = null;
+      })
     });
   }
   
   const cancel = () => {
     setIsCalled(false)
     
-    peerConnectionRef.current.close()
+    theCall.close()
   }
   
   return (
