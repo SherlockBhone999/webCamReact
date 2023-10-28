@@ -3,8 +3,8 @@ import { useState , createContext , useEffect , useRef } from "react"
 import Peer from "peerjs"
 import io from "socket.io-client"
 
-//const serverBaseUrl = "http://localhost:3000/"
-const serverBaseUrl = "https://webcamserver.onrender.com/"
+const serverBaseUrl = "http://localhost:3000/"
+//const serverBaseUrl = "https://webcamserver.onrender.com"
 
 const socket = io(serverBaseUrl)
 
@@ -24,7 +24,7 @@ const ContextProvider = () => {
       var isAlreadyExist = false
       var indexToReplace = null
       userss.map((user,index) => {
-        if(user.socketId === potentialNewUser.socketId){
+        if(user.socketId === potentialNewUser.socketId ){
           isAlreadyExist = true
           indexToReplace = index
         }
@@ -48,29 +48,30 @@ const ContextProvider = () => {
           peerId : peerId
         }
       setUserInfo(newUserInfo)
-      socket.emit("sendUserInfoToServer", newUserInfo, users )
+      if(userInfo.socketId && userInfo.peerId){
+        socket.emit("sendUserInfoToServer", userInfo )
+      }
     })
     
-    socket.on("sendUserInfoToClient", (newUserInfo, userss) => {
-      updateUsers(newUserInfo, userss)
+    socket.on("sendUsersToClient", (users) => {
+      setUsers(users)
     })
     
-    peer.on('call', (call) => {
-      call.answer()
-      call.on("stream", (remoteStream) => {
+    peer.on("call", (call) => {
+      call.answer();
+      call.on("stream", function (remoteStream) {
         videoRef.current.srcObject = remoteStream;
         videoRef.current.play();
-      })
-      
-      
-    })
+      });
+    });
+    
     
     peerConnectionRef.current = peer 
   },[])
   
   useEffect(()=>{
     if(userInfo.socketId && userInfo.peerId){
-      socket.emit("sendUserInfoToServer", userInfo, users )
+      socket.emit("sendUserInfoToServer", userInfo )
     }
   },[userInfo])
   

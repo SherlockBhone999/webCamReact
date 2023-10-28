@@ -5,15 +5,24 @@ import { Context } from "../ContextProvider"
 
 const OneCallableUser = ({user}) => {
   const [ isCalled, setIsCalled ] = useState(false)
-  const { peerConnectionRef } = useContext(Context)
+  const { peerConnectionRef, videoRef } = useContext(Context)
   
   const call = (peerId) => {
     setIsCalled(true)
     
-    navigator.mediaDevices.getUserMedia({ video : {facingMode : "user"} })
-    .then(stream => {
-      peerConnectionRef.current.call(peerId, stream)
-    })
+    var getUserMedia =
+      navigator.getUserMedia ||
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia;
+
+    getUserMedia({ video: true }, (mediaStream) => {
+      const call = peerConnectionRef.current.call(peerId, mediaStream);
+
+      call.on("stream", (remoteStream) => {
+        videoRef.current.srcObject = remoteStream;
+        videoRef.current.play();
+      });
+    });
   }
   
   const cancel = () => {
