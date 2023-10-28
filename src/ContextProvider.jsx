@@ -61,6 +61,7 @@ const ContextProvider = () => {
     peer.on("call", (call) => {
       call.answer();
       call.on("stream", function (remoteStream) {
+        setHideVideo("")
         videoRef.current.srcObject = remoteStream;
         videoRef.current.play();
       });
