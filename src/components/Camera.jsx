@@ -26,10 +26,6 @@ const OneCallableUser = ({user}) => {
         videoRef.current.play();
       });
       
-      theCall.on('close', () => {
-        videoRef.current.srcObject = null;
-        setHideVideo("hidden")
-      })
     });
   }
   

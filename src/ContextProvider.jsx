@@ -64,6 +64,11 @@ const ContextProvider = () => {
         videoRef.current.srcObject = remoteStream;
         videoRef.current.play();
       });
+      
+      call.on('close', () => {
+        videoRef.current.srcObject = null;
+        setHideVideo("hidden")
+      })
     });
     
     
