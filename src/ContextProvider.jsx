@@ -3,8 +3,8 @@ import { useState , createContext , useEffect , useRef } from "react"
 import Peer from "peerjs"
 import io from "socket.io-client"
 
-const serverBaseUrl = "http://localhost:3000/"
-//const serverBaseUrl = "https://webcamserver.onrender.com"
+//const serverBaseUrl = "http://localhost:3000/"
+const serverBaseUrl = "https://webcamserver.onrender.com"
 
 const socket = io(serverBaseUrl)
 
